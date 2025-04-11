@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import * as process from 'node:process';
 
 dotenv.config();
 
@@ -15,6 +16,16 @@ interface Config {
     host: string
     password: string
     port: number
+  },
+  speakeasy: {
+    secret: string,
+    duration: number,
+    digits: number
+  },
+  mail:{
+    host: string,
+    user: string,
+    pass: string
   }
 }
 
@@ -32,6 +43,16 @@ const config: Config = {
     password: process.env.REDIS_PASSWORD || '',
     port: Number(process.env.REDIS_PORT) || 6379,
   },
+  speakeasy:{
+    secret: process.env.SPEAKASY_SECRET || 'SECRET',
+    duration: Number(process.env.SPEAKASY_DURATION) * 60 || 5 * 60,
+    digits: Number(process.env.SPEAKASY_DIGITS) || 6,
+  },
+  mail:{
+    host: process.env.MAIL_HOST ||'smtp.gmail.com',
+    user: process.env.MAIL_AUTH_USER || 'hardsontessi2@gmail.com',
+    pass: process.env.MAIL_AUTH_PASSWORD || 'sxjebkrlttlptqvb',
+  }
 
 };
 

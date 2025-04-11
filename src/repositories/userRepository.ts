@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import prisma, { UserType } from '@/lib/prisma';
 import { UserRegisterType } from '@/dtos/RegisterDto';
 
 const saveUser = async (data: UserRegisterType) => {
@@ -13,4 +13,11 @@ const findUserByEmail = async (email: string) => {
   });
 };
 
-export default { saveUser, findUserByEmail };
+const updateUserByEmail = async (email: string, data: Partial<UserType>) => {
+  return prisma.user.update({
+    where: { email },
+    data,
+  });
+};
+
+export default { saveUser, findUserByEmail, updateUserByEmail };
