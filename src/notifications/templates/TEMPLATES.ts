@@ -1,5 +1,7 @@
-import ActiveAccountTemplate from '@/notifications/templates/ActiveAccountTemplate';
+import ActiveAccountTemplate from './ActiveAccount.template';
+import RepeatableTemplate from './Repeatable.template';
 
 export default {
-  activeAccount: ActiveAccountTemplate
-}
+  activeAccount: ActiveAccountTemplate,
+  repeatable: RepeatableTemplate,
+};

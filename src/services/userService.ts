@@ -77,9 +77,9 @@ const login = async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Wrong password' });
   }
 
-  if (!user.isActived){
+  if (!user.isActived) {
     res.status(403).json({ message: 'Please, confirm your account' });
-    return
+    return;
   }
 
 //   jwt
