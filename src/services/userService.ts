@@ -52,7 +52,26 @@ const activateUser = async (req: Request, res: Response) => {
 
   await UserRepository.updateUserByEmail(dto.email, { isActived: true });
 
-  res.status(200).send({ message: `User ${email} updated successfully` });
+  const token = jwtService.generateToken(user);
+
+  res.status(200).send({user, token});
+
+};
+
+const regenerateCode = async (req: Request, res: Response) => {
+  const email = req.body.email;
+
+  // get l'user
+  const user = await UserRepository.findUserByEmail(email);
+
+  if (!user) {
+    res.status(404).json({ message: `User ${email} not found` });
+    return;
+  }
+
+  await sendActivateMail(user);
+
+  res.status(200).json({ message: 'Code envoyé' });
 
 };
 
@@ -77,9 +96,9 @@ const login = async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Wrong password' });
   }
 
-  if (!user.isActived){
+  if (!user.isActived) {
     res.status(403).json({ message: 'Please, confirm your account' });
-    return
+    return;
   }
 
 //   jwt
@@ -93,4 +112,4 @@ const login = async (req: Request, res: Response) => {
 };
 
 
-export default { register, login, activateUser };
+export default { register, login, activateUser, regenerateCode };
