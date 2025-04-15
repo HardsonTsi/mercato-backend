@@ -39,7 +39,7 @@ const activateUser = async (req: Request, res: Response) => {
   const user = await UserRepository.findUserByEmail(email);
 
   if (!user) {
-    res.status(404).send({ mesage: `User ${dto.email} not found` });
+    res.status(404).send({ message: `User ${dto.email} not found` });
     return;
   }
 

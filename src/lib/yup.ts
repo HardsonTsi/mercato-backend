@@ -11,7 +11,7 @@ const validate = (schema: AnySchema): RequestHandler => {
       next();
     } catch (err: any) {
       res.status(400).json({
-        err: err?.['message'],
+        message: err?.['message'],
       });
     }
   };
