@@ -54,7 +54,7 @@ const activateUser = async (req: Request, res: Response) => {
 
   const token = jwtService.generateToken(user);
 
-  res.status(200).send({user, token});
+  res.status(200).send({ user, token });
 
 };
 
