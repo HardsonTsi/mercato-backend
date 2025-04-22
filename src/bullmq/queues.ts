@@ -3,5 +3,6 @@ import redis from '@/config/redis';
 import "./workers"
 
 const UserActivationQueue = new Queue('UserActivationQueue', { connection: redis });
+const AutomateQueue = new Queue('AutomateQueue', { connection: redis });
 
-export default { UserActivationQueue };
+export default { UserActivationQueue, AutomateQueue };

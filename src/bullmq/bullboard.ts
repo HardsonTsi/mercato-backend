@@ -7,7 +7,7 @@ const bullBoardAdapter = new ExpressAdapter();
 bullBoardAdapter.setBasePath('/queues');
 
 const response = createBullBoard({
-  queues: [new BullMQAdapter(queues.UserActivationQueue)],
+  queues: Object.values(queues).map((queue) => new BullMQAdapter(queue)),
   serverAdapter: bullBoardAdapter,
 });
 
