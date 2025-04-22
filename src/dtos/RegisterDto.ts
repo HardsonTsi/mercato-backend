@@ -6,7 +6,7 @@ const userRegisterSchema = object({
   password: string().min(config.passwordLength, `Password too short, at least length ${config.passwordLength}`).required(),
   firstname: string().notRequired(),
   lastname: string().notRequired(),
-  role: string().oneOf(["USER", "ADMIN"]).default("USER"),
+  role: string().oneOf(['USER', 'ADMIN']).default('USER'),
   isActived: boolean().default(false),
 });
 
