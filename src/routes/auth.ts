@@ -1,9 +1,10 @@
 import express from 'express';
 import { userRegisterSchema } from '@/dtos/RegisterDto';
-import UserService from '@/services/userService';
+import UserService from '@/services/UserService';
 import validate from '@/lib/yup';
 import { userLoginSchema } from '@/dtos/LoginDto';
 import { activateUserSchema, sendCodeSchema } from '@/dtos/ActivateUserDto';
+import { checkJWT } from '@/middlewares/middlewares';
 
 const router = express.Router();
 
@@ -27,10 +28,16 @@ router.post(
 
 
 router.post(
-  "/sendCode",
+  '/sendCode',
   validate(sendCodeSchema),
-  UserService.regenerateCode
-)
+  UserService.regenerateCode,
+);
+
+router.get(
+  '/profile',
+  checkJWT,
+  UserService.getUserProfile,
+);
 
 
 export default router;

@@ -34,9 +34,13 @@ export const checkJWT = (req: Request, res: Response, next: NextFunction) => {
   const user = jwt.verify(token)
 
   if (user) {
-    req.body.user = user
+    req.body = {
+      ...req.body,
+      user
+    }
     next();
+  }else{
+    res.status(401).json({ message: 'Token inconnu' });
   }
-  res.status(401).json({ message: 'Token inconnu' });
 
 };

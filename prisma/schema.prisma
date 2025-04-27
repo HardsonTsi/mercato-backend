@@ -39,10 +39,10 @@ model Club {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String @unique
   country  String
-  budget   BigInt
-  expenses BigInt
+  budget   Float @default(0)
+  expenses Float @default(0)
+  logo String?
 
   // Membres
   members   User[]  @relation("ClubMembers")
-  createdBy String? @db.ObjectId
 }

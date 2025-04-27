@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import config from '@/config/config';
 import { Request, Response } from 'express';
-import UserRepository from '@/repositories/userRepository';
+import UserRepository from '@/repositories/UserRepository';
 import { LoginType } from '@/dtos/LoginDto';
 import jwtService from '@/lib/jwt';
 import { UserRegisterType } from '@/dtos/RegisterDto';
@@ -111,5 +111,21 @@ const login = async (req: Request, res: Response) => {
 
 };
 
+const getUserByEmail = async (email: string) => {
+  return UserRepository.findUserByEmail(email);
+};
 
-export default { register, login, activateUser, regenerateCode };
+const assignClubToUser = async (email: string, clubId: string) => {
+  return UserRepository.assignClubToUser(email, clubId);
+}
+
+const getUserProfile = async (req: Request, res: Response) => {
+  const email = req.body.user.email
+
+  const user = await getUserByEmail(email)
+
+  res.status(200).json(user)
+
+}
+
+export default { register, login, activateUser, regenerateCode, getUserByEmail, assignClubToUser, getUserProfile };

@@ -34,9 +34,52 @@ export const UserActivationWorker = new Worker(
       "method": "GET"
     });
 
+    const walletReq = await fetch("https://wallet-back-eekf.onrender.com/graphql", {
+      "headers": {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "cache-control": "no-cache",
+        "content-type": "application/json",
+        "pragma": "no-cache",
+        "priority": "u=1, i",
+        "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
+        "sec-ch-ua-mobile": "?1",
+        "sec-ch-ua-platform": "\"Android\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "Referer": "https://wallet-front.onrender.com/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "body": "{\"variables\":{},\"query\":\"{\\n  userWallets {\\n    id\\n    balance\\n    currency {\\n      name\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "method": "POST"
+    });
+
+    const shinyReq = await fetch("https://shiny-agency.onrender.com/freelances", {
+      "headers": {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "cache-control": "no-cache",
+        "pragma": "no-cache",
+        "priority": "u=1, i",
+        "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
+        "sec-ch-ua-mobile": "?1",
+        "sec-ch-ua-platform": "\"Android\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site",
+        "Referer": "https://shiny-agency-lac.vercel.app/",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "body": null,
+      "method": "GET"
+    });
+
     await job.updateData({
       ticket: ticketReq.status,
-      jobPortal: ticketReq.status,
+      jobPortal: jobPortalReq.status,
+      wallet: walletReq.status,
+      shiny: shinyReq.status
     })
 
     await job.updateProgress(100)

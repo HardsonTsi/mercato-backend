@@ -1,39 +1,25 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { checkJWT } from '@/middlewares/middlewares';
 
-const clubRouter = express.Router()
+import clubService from '@/services/ClubService';
+import validate from '@/lib/yup';
+import { createClubDto } from '@/dtos/CreateClubDto';
+
+const clubRouter = express.Router();
 
 
-clubRouter.use(checkJWT)
+clubRouter.use(checkJWT);
 
-clubRouter.get(
-  "/",
-  (req: Request, res: Response) => {
-    res.status(200).json(req.body.user)
-  }
+clubRouter.post(
+  '/create',
+  validate(createClubDto),
+  clubService.createClub,
+);
+
+clubRouter.put(
+  "/update",
+  validate(createClubDto),
+  clubService.updateClub
 )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export default clubRouter
+export default clubRouter;

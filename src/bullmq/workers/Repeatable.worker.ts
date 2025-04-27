@@ -40,14 +40,16 @@ const RepeatableWorker = new Worker('RepeatableQueue', async job => {
       html: residences.length ? html : 'Désolé',
     }, data)
       .then(async _ => {
-        await job.log('Response: ' + _.response.toString());
-        await job.updateProgress(100);
+        await job.updateData({
+          status: _.response.toString()
+        })
+
       })
       .catch(e => {
         job.log('Error: ' + e.toString());
       });
   }
-
+  await job.updateProgress(100);
 
 }, { connection: redis });
 export default RepeatableWorker;
