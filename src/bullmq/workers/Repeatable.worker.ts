@@ -41,8 +41,8 @@ const RepeatableWorker = new Worker('RepeatableQueue', async job => {
     }, data)
       .then(async _ => {
         await job.updateData({
-          status: _.response.toString()
-        })
+          status: _.response.toString(),
+        });
 
       })
       .catch(e => {

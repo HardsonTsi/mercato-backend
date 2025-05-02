@@ -1,10 +1,12 @@
-import { PrismaClient, User, Club } from '@/generated/client';
+import { Club, Player, PrismaClient, User } from '@/generated/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const prisma = global.prisma || new PrismaClient();
+const prisma = global.prisma || new PrismaClient({
+  errorFormat: 'pretty',
+});
 
 if (!global.prisma) {
   prisma.$connect().then(() => console.log('Mongo 🚀'))
@@ -18,5 +20,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export type UserType = User
 export type ClubType = Club
+export type PlayerType = Player
 
 export default prisma;

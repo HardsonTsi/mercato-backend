@@ -36,13 +36,31 @@ model User {
 }
 
 model Club {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  name     String @unique
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String  @unique
   country  String
-  budget   Float @default(0)
-  expenses Float @default(0)
-  logo String?
+  budget   Float   @default(0)
+  expenses Float   @default(0)
+  logo     String?
 
   // Membres
-  members   User[]  @relation("ClubMembers")
+  members User[]   @relation("ClubMembers")
+  players Player[] @relation("ClubPlayers")
+}
+
+model Player {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  lastname  String
+  firstname String
+  email     String
+  number    Int
+  price     Int
+  available Boolean @default(true)
+  country   String
+  avatar    String?
+  images    String[] @default([])
+  videos    String[] @default([])
+
+  clubId String? @db.ObjectId
+  club   Club?   @relation("ClubPlayers", fields: [clubId], references: [id])
 }

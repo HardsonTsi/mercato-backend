@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import ClubRepository from '@/repositories/ClubRepository';
 import UserService from '@/services/UserService';
-import { CreateClubType } from '@/dtos/CreateClubDto';
+import { CreateClubType } from '@/dtos/CreateClub.dto';
 
 const createClub = async (req: Request, res: Response) => {
 
@@ -34,7 +34,7 @@ const updateClub = async (req: Request, res: Response) => {
     const result = await ClubRepository.updateClubById(id, dto);
     res.status(200).json(result);
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).json(e);
   }
 

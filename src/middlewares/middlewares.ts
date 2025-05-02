@@ -31,15 +31,16 @@ export const checkJWT = (req: Request, res: Response, next: NextFunction) => {
 
   token = token.slice(7, token.length);
 
-  const user = jwt.verify(token)
+  const user = jwt.verify(token);
 
   if (user) {
     req.body = {
       ...req.body,
-      user
-    }
+      user,
+    };
+    // console.log('user', user);
     next();
-  }else{
+  } else {
     res.status(401).json({ message: 'Token inconnu' });
   }
 

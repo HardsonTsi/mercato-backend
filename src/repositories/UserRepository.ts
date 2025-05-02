@@ -1,6 +1,5 @@
 import prisma, { UserType } from '@/lib/prisma';
-import { UserRegisterType } from '@/dtos/RegisterDto';
-import UserService from '@/services/UserService';
+import { UserRegisterType } from '@/dtos/Register.dto';
 
 const saveUser = async (data: UserRegisterType) => {
   return prisma.user.create({
@@ -21,6 +20,9 @@ const updateUserByEmail = async (email: string, data: Partial<UserType>) => {
   return prisma.user.update({
     where: { email },
     data,
+    include: {
+      club: true,
+    },
   });
 };
 

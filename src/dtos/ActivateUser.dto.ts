@@ -8,7 +8,7 @@ const activateUserSchema = object({
 
 const sendCodeSchema = object({
   email: string().email().required('Email is required'),
-})
+});
 
 type ActivateUserType = InferType<typeof activateUserSchema>
 

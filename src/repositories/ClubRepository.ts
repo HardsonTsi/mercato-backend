@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { CreateClubType } from '@/dtos/CreateClubDto';
+import { CreateClubType } from '@/dtos/CreateClub.dto';
 
 const createClub = async (data: CreateClubType) => {
   return prisma.club.create({
@@ -15,6 +15,9 @@ const updateClubById = async (id: string, data: CreateClubType) => {
       id,
     },
     data,
+    include: {
+      players: true,
+    },
   });
 };
 

@@ -1,5 +1,5 @@
 import config from '@/config/config';
-import { InferType, object, string, boolean } from 'yup';
+import { boolean, InferType, object, string } from 'yup';
 
 const userRegisterSchema = object({
   email: string().email().required('Email is required'),

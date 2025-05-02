@@ -1,9 +1,9 @@
 import express from 'express';
-import { userRegisterSchema } from '@/dtos/RegisterDto';
+import { userRegisterSchema } from '@/dtos/Register.dto';
 import UserService from '@/services/UserService';
 import validate from '@/lib/yup';
-import { userLoginSchema } from '@/dtos/LoginDto';
-import { activateUserSchema, sendCodeSchema } from '@/dtos/ActivateUserDto';
+import { userLoginSchema } from '@/dtos/Login.dto';
+import { activateUserSchema, sendCodeSchema } from '@/dtos/ActivateUser.dto';
 import { checkJWT } from '@/middlewares/middlewares';
 
 const router = express.Router();

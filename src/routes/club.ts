@@ -3,7 +3,7 @@ import { checkJWT } from '@/middlewares/middlewares';
 
 import clubService from '@/services/ClubService';
 import validate from '@/lib/yup';
-import { createClubDto } from '@/dtos/CreateClubDto';
+import { createClubDto } from '@/dtos/CreateClub.dto';
 
 const clubRouter = express.Router();
 
@@ -17,9 +17,9 @@ clubRouter.post(
 );
 
 clubRouter.put(
-  "/update",
+  '/update',
   validate(createClubDto),
-  clubService.updateClub
-)
+  clubService.updateClub,
+);
 
 export default clubRouter;

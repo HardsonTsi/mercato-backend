@@ -1,3 +1,3 @@
-import "./UserActivation.worker"
-import "./Automate.worker"
+import './UserActivation.worker';
+import './Automate.worker';
 import './Repeatable.worker';

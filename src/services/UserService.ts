@@ -2,10 +2,10 @@ import bcrypt from 'bcrypt';
 import config from '@/config/config';
 import { Request, Response } from 'express';
 import UserRepository from '@/repositories/UserRepository';
-import { LoginType } from '@/dtos/LoginDto';
+import { LoginType } from '@/dtos/Login.dto';
 import jwtService from '@/lib/jwt';
-import { UserRegisterType } from '@/dtos/RegisterDto';
-import { ActivateUserType } from '@/dtos/ActivateUserDto';
+import { UserRegisterType } from '@/dtos/Register.dto';
+import { ActivateUserType } from '@/dtos/ActivateUser.dto';
 import otp from '@/lib/otp';
 import queues from '@/bullmq/queues';
 import { UserType } from '@/lib/prisma';
@@ -117,15 +117,15 @@ const getUserByEmail = async (email: string) => {
 
 const assignClubToUser = async (email: string, clubId: string) => {
   return UserRepository.assignClubToUser(email, clubId);
-}
+};
 
 const getUserProfile = async (req: Request, res: Response) => {
-  const email = req.body.user.email
+  const email = req.body.user.email;
 
-  const user = await getUserByEmail(email)
+  const user = await getUserByEmail(email);
 
-  res.status(200).json(user)
+  res.status(200).json(user);
 
-}
+};
 
 export default { register, login, activateUser, regenerateCode, getUserByEmail, assignClubToUser, getUserProfile };
