@@ -1,5 +1,5 @@
 import { CreatePlayerType } from '@/dtos/Players.dto';
-import prisma from '@/lib/prisma';
+import prisma, { FootballPositionType } from '@/lib/prisma';
 
 const createPlayer = async (clubId: string, data: CreatePlayerType) => {
   return prisma.player.create({
@@ -32,14 +32,25 @@ const deletePlayerById = async (clubId: string, id: string) => {
   });
 };
 
-const searchPlayer = async (data: { name: string, available: boolean, country: string, price: number }) => {
-  const { name, available, country, price } = data;
+const searchPlayer = async (data: {
+  name: string;
+  available: boolean;
+  country: string;
+  price: number;
+  position: FootballPositionType;
+}) => {
+  const { name, available, country, price, position } = data;
   return prisma.player.findMany({
     where: {
       OR: [
         {
           lastname: {
             contains: name,
+          },
+        },
+        {
+          position: {
+            equals: position,
           },
         },
         {

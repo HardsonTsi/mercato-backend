@@ -1,4 +1,10 @@
-import { Club, Player, PrismaClient, User } from '@/generated/client';
+import {
+  Club,
+  Player,
+  PrismaClient,
+  User,
+  FootballPosition,
+} from '@/generated/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -21,5 +27,6 @@ if (process.env.NODE_ENV !== 'production') {
 export type UserType = User
 export type ClubType = Club
 export type PlayerType = Player
+export type FootballPositionType = FootballPosition;
 
 export default prisma;
