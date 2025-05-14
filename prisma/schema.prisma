@@ -19,36 +19,6 @@ enum Role {
   ADMIN
 }
 
-enum FootballPosition {
-  GOALKEEPER             // Gardien de but
-  RIGHT_BACK             // Arrière droit
-  LEFT_BACK              // Arrière gauche
-  CENTER_BACK            // Défenseur central
-  SWEEPER                // Libéro
-
-  DEFENSIVE_MIDFIELDER   // Milieu défensif
-  CENTRAL_MIDFIELDER     // Milieu central
-  BOX_TO_BOX_MIDFIELDER  // Milieu box-to-box
-
-  ATTACKING_MIDFIELDER   // Milieu offensif
-  RIGHT_MIDFIELDER       // Milieu droit
-  LEFT_MIDFIELDER        // Milieu gauche
-  WIDE_PLAYMAKER         // Meneur excentré
-  DEEP_LYING_PLAYMAKER   // Meneur de jeu en retrait
-
-  LEFT_WINGER            // Ailier gauche
-  RIGHT_WINGER           // Ailier droit
-  INVERTED_WINGER        // Ailier inversé
-
-  STRIKER                // Attaquant de pointe
-  CENTER_FORWARD         // Avant-centre
-  SECOND_STRIKER         // Deuxième attaquant
-  FALSE_NINE             // Faux neuf
-  POACHER                // Renard des surfaces
-  TARGET_MAN             // Pivot
-  SHADOW_STRIKER         // Attaquant de l'ombre
-}
-
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -69,31 +39,48 @@ model User {
 model Club {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   name     String  @unique
-  country  String
+  country  String @default("FR")
   budget   Float   @default(0)
-  expenses Float   @default(0)
   logo     String?
 
   // Membres
-  members User[]   @relation("ClubMembers")
-  players Player[] @relation("ClubPlayers")
+  members         User[]     @relation("ClubMembers")
+  players         Player[]   @relation("ClubPlayers")
+  soldTransfers   Transfer[] @relation("SellerClub")
+  boughtTransfers Transfer[] @relation("BuyerClub")
 }
 
 model Player {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
   lastname  String
   firstname String
   email     String
   number    Int
   price     Int
-  available Boolean @default(true)
+  available Boolean          @default(true)
   country   String
   avatar    String?
-  images    String[] @default([])
-  videos    String[] @default([])
-  birthday DateTime
-  position FootballPosition @default(GOALKEEPER)
+  images    String[]         @default([])
+  videos    String[]         @default([])
+  birthday  DateTime
+  position  String @default("Milieu défensif")
 
-  clubId String? @db.ObjectId
-  club   Club?   @relation("ClubPlayers", fields: [clubId], references: [id])
+  clubId    String?    @db.ObjectId
+  club      Club?      @relation("ClubPlayers", fields: [clubId], references: [id])
+  transfers Transfer[]
+}
+
+model Transfer {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  playerId String @db.ObjectId
+
+  player Player @relation(fields: [playerId], references: [id])
+
+  transferDate DateTime @default(now())
+
+  seller   Club   @relation("SellerClub", fields: [sellerId], references: [id])
+  sellerId String @db.ObjectId
+
+  buyer   Club   @relation("BuyerClub", fields: [buyerId], references: [id])
+  buyerId String @db.ObjectId
 }

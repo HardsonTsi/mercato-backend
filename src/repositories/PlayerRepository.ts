@@ -1,5 +1,5 @@
 import { CreatePlayerType } from '@/dtos/Players.dto';
-import prisma, { FootballPositionType } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 
 const createPlayer = async (clubId: string, data: CreatePlayerType) => {
   return prisma.player.create({
@@ -10,7 +10,7 @@ const createPlayer = async (clubId: string, data: CreatePlayerType) => {
   });
 };
 
-const updatePlayer = async (clubId: string, id: string, data: CreatePlayerType) => {
+const updatePlayer = async (clubId: string, id: string, data: any) => {
   return prisma.player.update({
     data,
     where: {
@@ -37,7 +37,7 @@ const searchPlayer = async (data: {
   available: boolean;
   country: string;
   price: number;
-  position: FootballPositionType;
+  position: string;
 }) => {
   const { name, available, country, price, position } = data;
   return prisma.player.findMany({
@@ -86,4 +86,18 @@ const findClubPlayers = async (clubId: string) => {
   });
 };
 
-export default { createPlayer, updatePlayer, findPlayerById, searchPlayer, deletePlayerById, findClubPlayers };
+const findMarketplacePlayers = async (clubId: string) => {
+
+  return prisma.player.findMany({
+    where: {
+      clubId: {
+        not: clubId,
+      },
+    },
+    include: {
+      club: true,
+    },
+  });
+};
+
+export default { createPlayer, updatePlayer, findPlayerById, searchPlayer, deletePlayerById, findClubPlayers, findMarketplacePlayers };

@@ -3,7 +3,7 @@ import {
   Player,
   PrismaClient,
   User,
-  FootballPosition,
+  Transfer
 } from '@/generated/client';
 
 declare global {
@@ -27,6 +27,6 @@ if (process.env.NODE_ENV !== 'production') {
 export type UserType = User
 export type ClubType = Club
 export type PlayerType = Player
-export type FootballPositionType = FootballPosition;
+export type TransferType = Transfer
 
 export default prisma;

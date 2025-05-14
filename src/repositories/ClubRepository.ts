@@ -7,8 +7,8 @@ const createClub = async (data: CreateClubType) => {
   });
 };
 
-const updateClubById = async (id: string, data: CreateClubType) => {
-  delete data.user;
+const updateClubById = async (id: string, data: Partial<CreateClubType>) => {
+  delete data?.user;
 
   return prisma.club.update({
     where: {
@@ -21,4 +21,12 @@ const updateClubById = async (id: string, data: CreateClubType) => {
   });
 };
 
-export default { createClub, updateClubById };
+const findClubById = async (id: string) =>{
+  return prisma.club.findUnique({
+    where: {
+      id
+    }
+  })
+}
+
+export default { createClub, updateClubById, findClubById };

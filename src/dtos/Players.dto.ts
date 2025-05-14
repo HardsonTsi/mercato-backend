@@ -1,5 +1,3 @@
-import { FootballPosition } from '@/generated/client';
-import { FootballPositionType } from '@/lib/prisma';
 import { boolean, InferType, number, object, string, date, mixed } from 'yup';
 
 export const createPlayerDto = object({
@@ -10,9 +8,9 @@ export const createPlayerDto = object({
   available: boolean().default(true).required(),
   price: number().positive().moreThan(0).required(),
   country: string().required(),
-  avatar: string().url().required(),
+  avatar: string().min(0),
   birthday:  date().required(),
-  position: mixed<FootballPositionType>().required(),
+  position: string().required(),
 });
 
 export type CreatePlayerType = InferType<typeof createPlayerDto>
