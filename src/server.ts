@@ -2,6 +2,9 @@ import app from '@/app';
 import config from '@/config/config';
 import redis from '@/config/redis';
 import Queues from '@/bullmq/queues';
+import mqtt from 'mqtt';
+const mqttClient = mqtt.connect(config.mqtt);
+
 
 app.listen(config.port, async () => {
   console.log(`Server running on port ${config.port} 🚀`);
@@ -29,6 +32,14 @@ app.listen(config.port, async () => {
   })
     .then(_ => console.log('Job ajouté ✔'))
     .catch(e => console.log('Job ajouté ❌', e));
+
+  mqttClient.on('connect', () => {
+    console.log('MQTT ✔');
+  });
+
+  mqttClient.on('error', console.log)
+
+
 
 
 });

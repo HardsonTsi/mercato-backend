@@ -93,6 +93,7 @@ const findMarketplacePlayers = async (clubId: string) => {
       clubId: {
         not: clubId,
       },
+      available: true
     },
     include: {
       club: true,

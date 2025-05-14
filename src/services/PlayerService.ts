@@ -2,7 +2,7 @@ import PlayerRepository from '@/repositories/PlayerRepository';
 import { Request, Response } from 'express';
 import ClubRepository from '@/repositories/ClubRepository';
 import prisma from '@/lib/prisma';
-
+import Mqtt from '@/lib/mqtt';
 
 const createPlayer = async (req: Request, res: Response) => {
   const dto = req.body;
@@ -12,12 +12,21 @@ const createPlayer = async (req: Request, res: Response) => {
 
   try {
     const response = await PlayerRepository.createPlayer(user.clubId, dto);
+    if (response.available) {
+      Mqtt.publishMessage(
+        'newPlayer',
+        JSON.stringify({
+          seller: user.clubId,
+          message: `${response.firstname} ${response.lastname} a été mis en vente par le club ${user.clubId}`,
+        }),
+      );
+    }
+
     res.status(201).json(response);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
   }
-
 };
 
 const updatePlayer = async (req: Request, res: Response) => {
@@ -31,12 +40,20 @@ const updatePlayer = async (req: Request, res: Response) => {
 
   try {
     const response = await PlayerRepository.updatePlayer(user.clubId, id, dto);
+    if (response.available) {
+      Mqtt.publishMessage(
+        'newPlayer',
+        JSON.stringify({
+          seller: user.clubId,
+          message: `${response.firstname} ${response.lastname} a été mis en vente par le club ${user.clubId}`,
+        }),
+      );
+    }
     res.status(200).json(response);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
   }
-
 };
 
 const getPlayerById = async (req: Request, res: Response) => {
@@ -44,11 +61,9 @@ const getPlayerById = async (req: Request, res: Response) => {
 
   const player = await PlayerRepository.findPlayerById(id);
 
-  if (!player)
-    res.status(404).json({ message: 'Joueur introuvable' });
+  if (!player) res.status(404).json({ message: 'Joueur introuvable' });
 
   res.status(200).json(player);
-
 };
 
 const deletePlayer = async (req: Request, res: Response) => {
@@ -61,7 +76,6 @@ const deletePlayer = async (req: Request, res: Response) => {
   } catch (e) {
     res.status(500).send(e);
   }
-
 };
 
 const getClubPlayers = async (req: Request, res: Response) => {
@@ -79,7 +93,6 @@ const getMarketplace = async (req: Request, res: Response) => {
     console.log(e);
     res.status(500).send([]);
   }
-
 };
 
 const sellPlayer = async (req: Request, res: Response) => {
@@ -87,19 +100,21 @@ const sellPlayer = async (req: Request, res: Response) => {
     const buyerId = req.body.user.clubId;
     const playerId = req.body.playerId;
 
-
-
     const player = await PlayerRepository.findPlayerById(playerId);
 
     if (!player) {
-      res.status(404).json({ message: `Joueur avec l'ID ${playerId} introuvable.` });
+      res
+        .status(404)
+        .json({ message: `Joueur avec l'ID ${playerId} introuvable.` });
       return;
     }
 
     const sellerId = player.clubId;
     if (buyerId == sellerId) {
-      console.table([buyerId, sellerId])
-      res.status(400).json({ message: `Impossible d'acheter votre propre joueur.` });
+      console.table([buyerId, sellerId]);
+      res
+        .status(400)
+        .json({ message: `Impossible d'acheter votre propre joueur.` });
       return;
     }
 
@@ -107,18 +122,22 @@ const sellPlayer = async (req: Request, res: Response) => {
 
     const buyer = await ClubRepository.findClubById(buyerId);
 
-
     if (!seller || !buyer) {
-      res.status(404).json({ message: `Club acheteur ou vendeur introuvable.` });
+      res
+        .status(404)
+        .json({ message: `Club acheteur ou vendeur introuvable.` });
       return;
     }
 
     if (buyer.budget - player.price < 0) {
-      console.log("Budget insuffisant")
-      res.status(400).json({ message: `Le budget du club acheteur est insuffisant pour cet achat.` });
+      console.log('Budget insuffisant');
+      res
+        .status(400)
+        .json({
+          message: `Le budget du club acheteur est insuffisant pour cet achat.`,
+        });
       return;
     }
-
 
     const transfert = await prisma.transfer.create({
       data: {
@@ -137,14 +156,19 @@ const sellPlayer = async (req: Request, res: Response) => {
     // Mise à jour des budgets
     await Promise.all([
       ClubRepository.updateClubById(buyerId, {
-
         budget: buyer.budget - player.price,
       }),
       ClubRepository.updateClubById(sellerId!, {
-
         budget: seller.budget + player.price,
       }),
     ]);
+
+    const payload = {
+      message: `Joueur ${player.lastname} ${player.firstname} vendu au club ${buyer.name}`,
+      seller: sellerId,
+    };
+
+    Mqtt.publishMessage('sell', JSON.stringify(payload));
 
     res.status(200).json(transfert);
   } catch (error) {
@@ -153,5 +177,12 @@ const sellPlayer = async (req: Request, res: Response) => {
   }
 };
 
-
-export default { createPlayer, updatePlayer, getPlayerById, deletePlayer, getClubPlayers, getMarketplace, sellPlayer };
+export default {
+  createPlayer,
+  updatePlayer,
+  getPlayerById,
+  deletePlayer,
+  getClubPlayers,
+  getMarketplace,
+  sellPlayer,
+};

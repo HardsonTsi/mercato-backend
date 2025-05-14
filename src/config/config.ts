@@ -27,6 +27,7 @@ interface Config {
     user: string,
     pass: string
   }
+  mqtt: string
 }
 
 const config: Config = {
@@ -53,6 +54,7 @@ const config: Config = {
     user: process.env.MAIL_AUTH_USER || 'hardsontessi2@gmail.com',
     pass: process.env.MAIL_AUTH_PASSWORD || 'sxjebkrlttlptqvb',
   },
+  mqtt: process.env.MQTT_URL || "mqtt://broker.hivemq.com:1883"
 
 };
 
